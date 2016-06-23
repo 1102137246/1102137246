@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewBag.Title = "Insert";
+}
+<div style="margin-top:100px">
+    <h2>新增員工</h2>
+    <form id="insert">
+        <table border="1">
+            <tr>
+                <td>姓</td>
+                <td colspan="3"><input type="text" id="FirstName" name="FirstName" placeholder="First name" required validationMessage="Enter {0}" /><span data-for='FirstName' class='k-invalid-msg'></span></td>
+            </tr>
+            <tr>
+                <td>名</td>
+                <td colspan="3"><input type="text" id="LastName" name="LastName" required validationMessage="Enter {0}" /><span data-for='LastName' class='k-invalid-msg'></span></td>
+            </tr>
+            <tr>
+                <td>職稱</td>
+                <td colspan="3"><input type="text" id="CodeId" name="CodeId" required validationMessage="Enter {0}" /><span data-for='CodeId' class='k-invalid-msg'></span></td>
+            </tr>
+            <tr>
+                <td>稱謂</td>
+                <td colspan="3"><input type="text" id="TitleOfCourtesy" name="TitleOfCourtesy" /></td>
+            </tr>
+            <tr>
+                <td>任職日期</td>
+                <td colspan="3"><input type="text" id="HireDate" name="HireDate" /></td>
+            </tr>
+            <tr>
+                <td>生日</td>
+                <td colspan="3"><input type="text" id="BirthDate" name="BirthDate" /></td>
+            </tr>
+            <tr>
+                <td>國家</td>
+                <td colspan="3"><input type="text" id="Country" name="Country" /></td>
+            </tr>
+            <tr>
+                <td>城市</td>
+                <td colspan="3"><input type="text" id="City" name="City" /></td>
+            </tr>
+            <tr>
+                <td>電話</td>
+                <td colspan="3"><input type="text" id="Phone" name="Phone" /></td>
+            </tr>
+            <tr>
+                <td>姓別</td>
+                <td colspan="3"><input type="text" id="Gender" name="Gender" /></td>
+            </tr>
+            <tr>
+                <td>直屬主管</td>
+                <td colspan="3"><input type="text" id="ManagerID" name="ManagerID" /></td>
+            </tr>
+            <tr>
+                <td>月薪</td>
+                <td colspan="3"><input type="text" id="MonthlyPayment" name="MonthlyPayment" /></td>
+            </tr>
+            <tr>
+                <td>年薪</td>
+                <td colspan="3"><input type="text" id="YearlyPayment" name="YearlyPayment" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button type="button" id="submit" onclick="Save()">新增</button>
+                    <input type="reset" id="reset" value="清除" />
+                    <button type="button" id="back" onclick="location.href='/Default/Index'">回前一頁</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script>
+    $('#submit').kendoButton();
+    $('#reset').kendoButton();
+    $('#back').kendoButton();
+    $('#BirthDate').kendoDatePicker();
+    $('#HireDate').kendoDatePicker();
+    $('document').ready(function () {
+        $.ajax({
+            method: "GET",
+            url: "/Default/Default",
+            dataType: "json",
+            success: function (msg) {
+                var codeTitle = msg[0];
+                var country = msg[1];
+                $("#CodeId").kendoComboBox({
+                    dataTextField: "CodeVal",
+                    dataValueField: "CodeId",
+                    dataSource: codeTitle,
+                });
+                $("#Country").kendoComboBox({
+                    dataTextField: "Country",
+                    dataValueField: "Country",
+                    dataSource: country,
+                });
+            },
+            error: function () {
+            },
+        });
+    });
+
+
+</script>

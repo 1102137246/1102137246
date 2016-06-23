@@ -1,0 +1,110 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div style="margin-top:100px">
+    <h2>員工資料查詢</h2>
+    <form id="index">
+        <table border="1">
+            <tr>
+                <td>員工編號</td>
+                <td colspan="3"><input type="text" id="EmpId" name="EmpId" /></td>
+            </tr>
+            <tr>
+                <td>員工姓名</td>
+                <td colspan="3"><input type="text" id="FirstName" name="FirstName" /></td>
+            </tr>
+            <tr>
+                <td>職稱</td>
+                <td colspan="3"><input type="text" id="CodeId" name="CodeId" /></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <button type="button" id="submit" onclick="Submit()">查詢</button>
+                    <input type="reset" id="reset" value="清除" />
+                    <button type="button" id="insert" onclick="location.href='/Default/Insert'">新增員工</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div id="grid"></div>
+</div>
+<script>
+    $('#submit').kendoButton();
+    $('#reset').kendoButton();
+    $('#insert').kendoButton();
+    $('document').ready(function () {
+        $.ajax({
+            method: "GET",
+            url: "/Default/Default",
+            dataType: "json",
+            success: function (msg) {
+                var codeTitle = msg[0];
+                $("#CodeId").kendoComboBox({
+                    dataTextField: "CodeVal",
+                    dataValueField: "CodeId",
+                    dataSource: codeTitle,
+                });
+            },
+            error: function () {
+            }
+        });
+    });
+    var Submit = function () {
+        $.ajax({
+            method: "POST",
+            url: "/Default/Index",
+            dataType: "json",
+            data: $('#index').serialize(),
+            success: function (msg) {
+
+                $("#grid").kendoGrid({
+                    dataSource: {
+                        data: msg,
+                        pageSize: 20
+                    },
+                    height: 550,
+                    scrollable: true,
+                    sortable: true,
+                    pageable: {
+                        refresh: true,
+                        pageSizes: true,
+                        buttonCount: 5
+                    },
+                    columns: [
+                        { field: "EmpId", title: "EmployeeID", width: "130px" },
+                        { field: "FirstName", title: "FirstName", width: "130px" },
+                        { field: "Title", title: "Title", width: "130px" },
+                        { field: "Gender", title: "Gender", width: "130px" },
+                        { command: { text: "Update", click: Update }, title: "修改", width: "130px" },
+                        { command: { text: "Delete", click: Delete }, title: "刪除", width: "130px" }
+                    ]
+                });
+            },
+            error: function () {
+            }
+        });
+    };
+
+    var Update = function (e) {
+
+    }
+
+    var Delete = function (e) {
+        var empId = this.dataItem($(e.currentTarget).closest("tr")).EmpId;
+        $.ajax({
+            method: "POST",
+            url: "/Default/Delete",
+            data: { employeeId: empId },
+            success: function () {
+                alert("刪除成功");
+                $(e.currentTarget).closest("tr").remove();
+            },
+            error: function () {
+            },
+        });
+    };
+
+</script>
